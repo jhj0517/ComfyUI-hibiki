@@ -10,6 +10,7 @@ class HibikiInferencer:
         self.mimi = None
         self.text_tokenizer = None
         self.lm = None
+        self.device = None
 
     def load_model(self,
                    hf_repo: str,
@@ -20,6 +21,7 @@ class HibikiInferencer:
             dtype = torch.bfloat16
         elif dtype == "fp16":
             dtype = torch.float16
+        self.device = device
 
         self.model = loaders.CheckpointInfo.from_hf_repo(
             hf_repo
@@ -31,7 +33,6 @@ class HibikiInferencer:
     def predict(self,
                 input_path: str,
                 output_path: str,
-                device: str = "cuda",
                 batch_size: int = 8,
                 cfg_coef: float = 1.0
                 ):
@@ -39,12 +40,12 @@ class HibikiInferencer:
             raise ValueError("Model is not loaded. Please load the model with `load_model()` first.")
 
         in_pcms, _ = sphn.read(input_path, sample_rate=self.mimi.sample_rate)
-        in_pcms = torch.from_numpy(in_pcms).to(device=device)
+        in_pcms = torch.from_numpy(in_pcms).to(device=self.device)
         in_pcms = in_pcms[None, 0:1].expand(batch_size, -1, -1)
 
         state = InferenceState(
             self.model.model_type, self.mimi, self.text_tokenizer, self.lm,
-            batch_size, cfg_coef, device, **self.model.lm_gen_config)
+            batch_size, cfg_coef, self.device, **self.model.lm_gen_config)
         out_items = state.run(in_pcms)
 
         outfile = Path(output_path)
