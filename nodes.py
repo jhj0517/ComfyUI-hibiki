@@ -8,6 +8,11 @@ from comfy.utils import ProgressBar
 
 from .modules.hibiki_inferencer import HibikiInferencer
 
+# To fix https://github.com/jhj0517/ComfyUI-hibiki/issues/1
+import torch._dynamo
+torch._dynamo.config.suppress_errors = True
+
+
 
 custom_nodes_script_dir = os.path.dirname(os.path.abspath(__file__))
 # custom_nodes_model_dir = os.path.join(folder_paths.models_dir, "my-custom-nodes")
