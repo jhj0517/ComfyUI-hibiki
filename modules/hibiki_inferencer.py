@@ -1,7 +1,7 @@
 from typing import Optional
 import sphn
 
-from ..moshi.moshi.moshi.run_inference import *
+from moshi.run_inference import *
 
 
 class HibikiInferencer:
