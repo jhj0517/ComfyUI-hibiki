@@ -1,6 +1,2 @@
-sentencepiece==0.2.0
-sounddevice==0.5.0
-soundfile==0.12.1
-sphn==0.1.4
-huggingface-hub==0.24.6
+git+https://github.com/jhj0517/moshi_comfyui_wrapper.git@main#subdirectory=moshi
 
