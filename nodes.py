@@ -57,7 +57,7 @@ class SpeechToSpeechTranslation:
         return {
             "required": {
                 "model": ("HIBIKI_MODEL", ),
-                "audio": ("AUDIO", ),
+                "audio": ("STRING", ),
                 "batch_size": ("INT", {"default": 5}),
                 "cfg_coef": ("FLOAT", {"default": 1.0}),
             }
