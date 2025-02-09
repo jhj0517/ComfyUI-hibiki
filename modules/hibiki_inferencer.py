@@ -1,7 +1,13 @@
-from typing import Optional
+from typing import Optional, Union
+import torch
 import sphn
+from pathlib import Path
 
 from moshi.run_inference import *
+
+# To fix https://github.com/jhj0517/ComfyUI-hibiki/issues/1
+import torch._dynamo
+torch._dynamo.config.suppress_errors = True
 
 
 class HibikiInferencer:
@@ -31,46 +37,31 @@ class HibikiInferencer:
         self.lm = self.model.get_moshi(device=device, dtype=dtype)
 
     def predict(self,
-                input_path: str,
-                output_path: str,
+                input: Union[str, torch.Tensor],
+                sample_rate: Optional[int] = None,
                 batch_size: int = 8,
                 cfg_coef: float = 1.0
                 ):
         if self.model is None:
             raise ValueError("Model is not loaded. Please load the model with `load_model()` first.")
 
-        in_pcms, _ = sphn.read(input_path, sample_rate=self.mimi.sample_rate)
-        in_pcms = torch.from_numpy(in_pcms).to(device=self.device)
-        in_pcms = in_pcms[None, 0:1].expand(batch_size, -1, -1)
+        if sample_rate is None:
+            sample_rate = self.mimi.sample_rate
+
+        if isinstance(input, str):
+            in_pcms, _ = sphn.read(input, sample_rate=sample_rate)
+            in_pcms = torch.from_numpy(in_pcms).to(device=self.device)
+            in_pcms = in_pcms[None, 0:1].expand(batch_size, -1, -1)
+        else:
+            in_pcms = input.to(device=self.device)
+            in_pcms = in_pcms.expand(batch_size, -1, -1)
 
         state = InferenceState(
             self.model.model_type, self.mimi, self.text_tokenizer, self.lm,
-            batch_size, cfg_coef, self.device, **self.model.lm_gen_config)
+            batch_size, cfg_coef, self.device, **self.model.lm_gen_config
+        )
         out_items = state.run(in_pcms)
 
-        outfile = Path(output_path)
-        for index, (_, out_pcm) in enumerate(out_items):
-            if len(out_items) > 1:
-                outfile_ = outfile.with_name(f"{outfile.stem}-{index}{outfile.suffix}")
-            else:
-                outfile_ = outfile
-            duration = out_pcm.shape[1] / self.mimi.sample_rate
-            log("info", f"writing {outfile_} with duration {duration:.1f} sec.")
-            sphn.write_wav(str(outfile_), out_pcm[0].numpy(), sample_rate=self.mimi.sample_rate)
+        out_items = [audio for _, audio in out_items]
 
-        return outfile
-
-
-
-hibiki_inferencer = HibikiInferencer()
-hibiki_inferencer.load_model(
-    hf_repo="kyutai/hibiki-1b-pytorch-bf16"
-)
-hibiki_inferencer.predict(
-    input_path=r"C:\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-hibiki\data_sample_fr_hibiki_crepes.mp3",
-    output_path=r"C:\ComfyUI_windows_portable\ComfyUI\custom_nodes\ComfyUI-hibiki\output.wav"
-)
-
-
-
-
+        return out_items, sample_rate

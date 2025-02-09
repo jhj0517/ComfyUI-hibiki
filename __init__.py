@@ -5,6 +5,7 @@ from .nodes import *
 NODE_CLASS_MAPPINGS = {
     "(Down)Load Hibiki Model": HibikiModelLoader,
     "Speech To Speech Translation": SpeechToSpeechTranslation,
+    "Get Audio File Path": GetAudioFilePath,
 }
 
 
