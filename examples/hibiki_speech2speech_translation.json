@@ -1,0 +1,195 @@
+{
+  "last_node_id": 24,
+  "last_link_id": 26,
+  "nodes": [
+    {
+      "id": 10,
+      "type": "(Down)Load Hibiki Model",
+      "pos": [
+        1683.9019775390625,
+        1004.55126953125
+      ],
+      "size": [
+        315,
+        106
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "HIBIKI_MODEL",
+          "links": [
+            25
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "(Down)Load Hibiki Model"
+      },
+      "widgets_values": [
+        "kyutai/hibiki-1b-pytorch-bf16",
+        "cuda",
+        "bf16"
+      ]
+    },
+    {
+      "id": 24,
+      "type": "Speech To Speech Translation",
+      "pos": [
+        2075.005126953125,
+        1002.5678100585938
+      ],
+      "size": [
+        352.79998779296875,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "HIBIKI_MODEL",
+          "link": 25
+        },
+        {
+          "name": "audio",
+          "type": "STRING",
+          "link": 24,
+          "widget": {
+            "name": "audio"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            26
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Speech To Speech Translation"
+      },
+      "widgets_values": [
+        "",
+        5,
+        1
+      ]
+    },
+    {
+      "id": 15,
+      "type": "SaveAudio",
+      "pos": [
+        2499.45361328125,
+        1000.1107788085938
+      ],
+      "size": [
+        315,
+        100
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 26
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
+      ]
+    },
+    {
+      "id": 22,
+      "type": "Get Audio File Path",
+      "pos": [
+        1686.750732421875,
+        1175.716552734375
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "STRING",
+          "links": [
+            24
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Get Audio File Path"
+      },
+      "widgets_values": [
+        "/path/audio.mp3"
+      ]
+    }
+  ],
+  "links": [
+    [
+      24,
+      22,
+      0,
+      24,
+      1,
+      "STRING"
+    ],
+    [
+      25,
+      10,
+      0,
+      24,
+      0,
+      "HIBIKI_MODEL"
+    ],
+    [
+      26,
+      24,
+      0,
+      15,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.0834705943388392,
+      "offset": [
+        -1297.117265955907,
+        -730.2867173209627
+      ]
+    },
+    "node_versions": {
+      "ComfyUI-hibiki": "4074eb92181637d8c3ab80317b776536020c7eee",
+      "comfy-core": "v0.3.10"
+    },
+    "ue_links": [],
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}
