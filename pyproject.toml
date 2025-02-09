@@ -5,7 +5,7 @@ name = "comfyui-hibiki"
 description = "ComfyUI wrapper for Speech-to-Speech translation, hibiki: https://github.com/kyutai-labs/hibiki"
 version = "1.0.0"
 license = {file = "LICENSE"}
-dependencies = ["",]  # e.g.) ["numpy==1.18.1", ]
+dependencies = ["git+https://github.com/jhj0517/moshi_comfyui_wrapper.git@main#subdirectory=moshi",]
 
 [project.urls]
 Repository = "https://github.com/jhj0517/ComfyUI-hibiki.git"
