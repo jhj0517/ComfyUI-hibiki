@@ -1,7 +1,9 @@
 # ComfyUI hibiki
 
 This is the [ComfyUI](https://github.com/comfyanonymous/ComfyUI) custom node for [hibiki](https://github.com/kyutai-labs/hibiki).
-hibiki is an end-to-end speech-to-speech ( FR -> EN ) translation model. 
+<br>hibiki is an end-to-end speech-to-speech ( `FR -> EN` ) translation model. 
+
+
 
 ## Installation
 
